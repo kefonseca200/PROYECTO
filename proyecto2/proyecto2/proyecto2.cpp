@@ -99,3 +99,76 @@ int busquedaBinaria(ArrayList& lista, string nombre) {
     }
     return -1;
 }
+
+//Aquí realizo una lista enlazada para eliminar contactos
+
+struct Nodo {
+    Contacto dato;
+    Nodo* sig;
+};
+
+class ListaEnlazada {
+public:
+    Nodo* head;
+    ListaEnlazada() { head = NULL; }
+
+    //Insertar al inicio de la lista.
+    void insertar(Contacto c) {
+        Nodo* nuevo = new Nodo();
+        nuevo->dato = c;
+        nuevo->sig = head;
+        head = nuevo;
+    }
+
+    //Eliminar contacto por nombre
+    void eliminar(string nombre) {
+        Nodo* actual = head;
+        Nodo* anterior = NULL;
+
+        while (actual != NULL) {
+            if (actual->dato.nombre == nombre) {
+                if (anterior == NULL) head = actual->sig;
+                else anterior->sig = actual->sig;
+
+                delete actual;
+                cout << "El contacto se elimino de manera correcta.\n";
+                return;
+            }
+
+            anterior = actual;
+            actual = actual->sig;
+        }
+        cout << "No se ha encontrado el contacto que buscas.\n";
+    }
+};
+
+//Utilizo una pila para el hsitorial de operaciones
+struct NodoPila {
+    string operacion;
+    NodoPila* sig;
+};
+
+class Pila {
+public:
+    NodoPila* top;
+
+    Pila() { top = NULL; }
+
+    //Agrega las operaciones al historial
+    void push(string op) {
+        NodoPila* nuevo = new NodoPila();
+        nuevo->operacion = op;
+        nuevo->sig = top;
+        top = nuevo;
+    }
+
+    //Muestra el historial de operaciones
+    void mostrar() {
+        NodoPila* aux = top;
+        cout << "\n HISTORIAL DE OPERACIONES\n";
+        while (aux != NULL) {
+            cout << aux->operacion << endl;
+            aux = aux->sig;
+        }
+    }
+};
