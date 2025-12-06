@@ -215,3 +215,44 @@ public:
         return c;
     }
 };
+
+// Lista de contactos
+struct NodoArbol {
+    Contacto dato;
+    NodoArbol* izq;
+    NodoArbol* der;
+};
+
+class BST {
+public:
+    NodoArbol* raiz;
+
+    BST() { raiz = NULL; }
+
+    NodoArbol* insertarNodo(NodoArbol* r, Contacto c) {
+        if (r == NULL) {
+            r = new NodoArbol();
+            r->dato = c;
+            r->izq = r->der = NULL;
+            return r;
+        }
+        if (c.nombre < r->dato.nombre)
+            r->izq = insertarNodo(r->izq, c);
+        else
+            r->der = insertarNodo(r->der, c);
+
+        return r;
+    }
+
+    void insertar(Contacto c) {
+        raiz = insertarNodo(raiz, c);
+    }
+
+    // Recorre en inorden
+    void inorden(NodoArbol* r) {
+        if (r == NULL) return;
+        inorden(r->izq);
+        cout << r->dato.nombre << " | " << r->dato.telefono << " | " << r->dato.correo << endl;
+        inorden(r->der);
+    }
+};
