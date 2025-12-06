@@ -172,3 +172,46 @@ public:
         }
     }
 };
+
+// En esta parte utilizo una cola para los contactos pendientes.
+struct NodoCola {
+    Contacto dato;
+    NodoCola* sig;
+};
+
+class Cola {
+public:
+    NodoCola* frente;
+    NodoCola* fin;
+
+    Cola() { frente = fin = NULL; }
+
+    //Envia el contacto al final
+    void encolar(Contacto c) {
+        NodoCola* nuevo = new NodoCola();
+        nuevo->dato = c;
+        nuevo->sig = NULL;
+        if (fin == NULL) frente = fin = nuevo;
+        else {
+            fin->sig = nuevo;
+            fin = nuevo;
+        }
+    }
+
+    bool vacia() {
+        return frente == NULL;
+    }
+    //Saca al primero de la cola.
+    Contacto desencolar() {
+        if (vacia()) {
+            cout << "Cola vacia\n";
+            return Contacto{};
+        }
+        NodoCola* temp = frente;
+        frente = frente->sig;
+        Contacto c = temp->dato;
+        delete temp;
+        if (frente == NULL) fin = NULL;
+        return c;
+    }
+};
