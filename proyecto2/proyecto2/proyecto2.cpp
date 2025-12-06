@@ -256,3 +256,110 @@ public:
         inorden(r->der);
     }
 };
+
+//Menu
+
+int main() {
+    ArrayList lista;
+    ListaEnlazada listaEliminar;
+    Pila historial;
+    Cola colaPendientes;
+    BST arbol;
+
+    int opcion;
+
+    do {
+        cout << "\n MENÚ DE CONTACTOS \n";
+        cout << "1. Agregar contacto\n";
+        cout << "2. Listar contactos\n";
+        cout << "3. Buscar contacto\n";
+        cout << "4. Eliminar contacto\n";
+        cout << "5. Ver historial de operaciones\n";
+        cout << "6. Agregar un estudiante a la cola de pendientes\n";
+        cout << "7. Transferir contactos pendientes de la cola\n";
+        cout << "8. Ver inorden lista de contactos\n";
+        cout << "0. Salir\n";
+        cout << "Seleccione: ";
+        cin >> opcion;
+        cin.ignore();
+
+        if (opcion == 1) {
+            Contacto c;
+            cout << "Nombre: "; getline(cin, c.nombre);
+            cout << "Telefono: "; getline(cin, c.telefono);
+            cout << "Correo: "; getline(cin, c.correo);
+
+            lista.agregarContacto(c);
+            listaEliminar.insertar(c);
+            arbol.insertar(c);
+            historial.push("Se agrego: " + c.nombre);
+
+        }
+
+        else if (opcion == 2) {
+            cout << "\nOrdenar por:\n1. Nombre\n2. Telefono\n";
+            int ord;
+            cin >> ord;
+            cin.ignore();
+
+            if (ord == 1) lista.ListaPorNombre();
+            else lista.ListaPorTelefono();
+
+            cout << "\nCONTACTOS\n";
+            for (int i = 0; i < lista.size(); i++) {
+                Contacto c = lista.obtener(i);
+                cout << c.nombre << " | " << c.telefono << " | " << c.correo << endl;
+            }
+        }
+        else if (opcion == 3) {
+            string nombre;
+            cout << "Ingrese nombre del contacto: ";
+            getline(cin, nombre);
+
+            lista.ListaPorNombre();
+            int pos = busquedaBinaria(lista, nombre);
+
+            if (pos == -1) cout << "No encontrado\n";
+            else {
+                Contacto c = lista.obtener(pos);
+                cout << "Encontrado: " << c.nombre << " | " << c.telefono << " | " << c.correo << endl;
+            }
+        }
+        else if (opcion == 4) {
+            string nombre;
+            cout << "Contacto a eliminar: ";
+            getline(cin, nombre);
+
+            listaEliminar.eliminar(nombre);
+            historial.push("Se elimino: ");
+        }
+        else if (opcion == 5) {
+            historial.mostrar();
+        }
+        else if (opcion == 6) {
+            Contacto c;
+            cout << "Nombre: "; getline(cin, c.nombre);
+            cout << "Telefono: "; getline(cin, c.telefono);
+            cout << "Correo: "; getline(cin, c.correo);
+
+            colaPendientes.encolar(c);
+            historial.push("Se encolo pendiente: " + c.nombre);
+        }
+        else if (opcion == 7) {
+            cout << "\nTransfiriendo pendientes...\n";
+            while (!colaPendientes.vacia()) {
+                Contacto c = colaPendientes.desencolar();
+                lista.agregarContacto(c);
+                arbol.insertar(c);
+                historial.push("Se agrego desde cola: " + c.nombre);
+            }
+        }
+        else if (opcion == 8) {
+            cout << "\n Lista de contactos inorden\n";
+            arbol.inorden(arbol.raiz);
+        }
+
+    } while (opcion != 0);
+
+    return 0;
+}
